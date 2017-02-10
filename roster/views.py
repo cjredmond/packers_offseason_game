@@ -28,14 +28,21 @@ class FreeAgentView(TemplateView):
     template_name = "free_agent.html"
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['qb'] = FreeAgent.objects.filter(position='QB')
-        context['hb'] = FreeAgent.objects.filter(position='RB')
-        context['wr'] = FreeAgent.objects.filter(position='WR')
-        context['te'] = FreeAgent.objects.filter(position='TE')
-        context['ol'] = FreeAgent.objects.filter(position='OL')
-        context['dl'] = FreeAgent.objects.filter(position='DL')
-        context['ed'] = FreeAgent.objects.filter(position='ED')
-        context['lb'] = FreeAgent.objects.filter(position='LB')
-        context['cb'] = FreeAgent.objects.filter(position='CB')
-        context['s'] = FreeAgent.objects.filter(position='S')    
+        context['qb'] = FreeAgent.objects.filter(position='QB',on_team=False)
+        context['hb'] = FreeAgent.objects.filter(position='RB',on_team=False)
+        context['wr'] = FreeAgent.objects.filter(position='WR',on_team=False)
+        context['te'] = FreeAgent.objects.filter(position='TE',on_team=False)
+        context['ol'] = FreeAgent.objects.filter(position='OL',on_team=False)
+        context['dl'] = FreeAgent.objects.filter(position='DL',on_team=False)
+        context['ed'] = FreeAgent.objects.filter(position='ED',on_team=False)
+        context['lb'] = FreeAgent.objects.filter(position='LB',on_team=False)
+        context['cb'] = FreeAgent.objects.filter(position='CB',on_team=False)
+        context['s'] = FreeAgent.objects.filter(position='S',on_team=False)
+        return context
+
+class ReSignView(TemplateView):
+    template_name = "resign.html"
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['players'] = FreeAgent.objects.filter(on_team=True)
         return context

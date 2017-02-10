@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-    migrations.RunPython(add_draft),
-    migrations.RunPython(add_team_player),
-    migrations.RunPython(add_free_agents),
+    # migrations.RunPython(add_draft),
+    # migrations.RunPython(add_team_player),
+    # migrations.RunPython(add_free_agents),
     ]

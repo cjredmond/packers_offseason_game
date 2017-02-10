@@ -10,6 +10,13 @@
     <title></title>
   </head>
   <body>
+    <nav class="nav navbar">
+      <ul>
+        <li><a href="{% url 'index_view' %}">Team</a></li>
+        <li><a href="{% url 'free_agent_view' %}">Free Agents</a></li>
+        <li><a href="{% url 'resign_view' %}">Re Sign</a></li>
+      </ul>
+    </nav>
     <div class="container">
       {% block content %}
       {% endblock %}

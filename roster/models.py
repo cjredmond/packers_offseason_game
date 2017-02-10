@@ -34,3 +34,6 @@ class DraftPlayer(models.Model):
 
     def __str__(self):
         return str(self.position + ' ' + self.first_name + " " + self.last_name)
+
+class Draft(models.Model):
+    draft_round = models.IntegerField(default=1)
