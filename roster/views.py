@@ -22,7 +22,7 @@ class IndexView(TemplateView):
         context['s'] = Player.objects.filter(position='S')
         context['count'] = Player.objects.all().count()
         context['total_cap'] = total_cap
-        context['cap_space_left'] = 176 - total_cap
+        context['cap_space_left'] = 171.5 - total_cap
         return context
 
 class FreeAgentView(TemplateView):
@@ -72,7 +72,7 @@ class DraftPlayerView(CreateView):
         instance.last_name = player_info.last_name
         instance.position = player_info.position
         instance.cap_hit = player_info.cap_hit
-        instance.cut_savings = 0
+        instance.cut_savings = player_info.cap_hit / 2
         player_info.delete()
         return super().form_valid(form)
 
@@ -88,6 +88,44 @@ class ReSignPlayerView(CreateView):
         instance.last_name = player_info.last_name
         instance.position = player_info.position
         instance.cap_hit = player_info.cap_hit
-        instance.cut_savings = 0
+        instance.cut_savings = -(player_info.cap_hit/2)
         player_info.delete()
         return super().form_valid(form)
+
+class FreeAgentSignView(CreateView):
+    model = Player
+    
+
+
+import csv
+def clear():
+    Player.objects.all().delete()
+    DraftPlayer.objects.all().delete()
+    FreeAgent.objects.all().delete()
+
+def add_team_player():
+    with open('roster/packers_roster.csv') as infile:
+        reader = csv.reader(infile)
+        for row in reader:
+            print(row[0],row[1])
+            Player.objects.create(first_name=row[0],last_name=row[1],position=row[2],cap_hit=row[3],
+            cut_savings=0)
+
+def add_free_agents():
+    with open('roster/free_agents.csv') as infile:
+        reader = csv.reader(infile)
+        for row in reader:
+            print(row[0],row[1])
+            FreeAgent.objects.create(first_name=row[0],last_name=row[1],position=row[2],cap_hit=row[3],on_team=row[4])
+
+def add_draft():
+    with open('roster/draft.csv') as infile:
+        reader = csv.reader(infile)
+        for row in reader:
+            print(row[0],row[1])
+            DraftPlayer.objects.create(first_name=row[0],last_name=row[1],position=row[2],cap_hit=row[3],draft_round=row[4],college=row[5])
+
+def draft_reset():
+    draft = Draft.objects.first()
+    draft.round = 1
+    draft.save()
