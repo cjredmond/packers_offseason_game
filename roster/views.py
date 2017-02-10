@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.views.generic import ListView, TemplateView, DetailView
 from django.views.generic.edit import CreateView
 from django.urls import reverse, reverse_lazy
-
 from roster.models import Player, DraftPlayer, FreeAgent, Draft
 
 class IndexView(TemplateView):
@@ -24,7 +23,6 @@ class IndexView(TemplateView):
         context['count'] = Player.objects.all().count()
         context['total_cap'] = total_cap
         context['cap_space_left'] = 176 - total_cap
-        print(Player.objects.filter(position='HB'))
         return context
 
 class FreeAgentView(TemplateView):
@@ -69,6 +67,22 @@ class DraftPlayerView(CreateView):
         draft = Draft.objects.get(id=1)
         draft.draft_round += 1
         draft.save()
+        instance = form.save(commit=False)
+        instance.first_name = player_info.first_name
+        instance.last_name = player_info.last_name
+        instance.position = player_info.position
+        instance.cap_hit = player_info.cap_hit
+        instance.cut_savings = 0
+        player_info.delete()
+        return super().form_valid(form)
+
+class ReSignPlayerView(CreateView):
+    model = Player
+    fields = []
+    def get_success_url(self,**kwargs):
+        return reverse('resign_view')
+    def form_valid(self,form):
+        player_info = FreeAgent.objects.get(id=self.kwargs['pk'])
         instance = form.save(commit=False)
         instance.first_name = player_info.first_name
         instance.last_name = player_info.last_name

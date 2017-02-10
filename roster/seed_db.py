@@ -1,4 +1,4 @@
-from models.py import Draft, Player, DraftPlayer, FreeAgent
+from roster.models import Draft, Player, DraftPlayer, FreeAgent
 import csv
 
 def clear():
@@ -23,7 +23,7 @@ def add_draft():
     with open('roster/draft.csv') as infile:
         reader = csv.reader(infile)
         for row in reader:
-            DraftPlayer.objects.create(first_name=row[0],last_name=row[1],position=row[2],cap_hit=0,draft_round=row[4])
+            DraftPlayer.objects.create(first_name=row[0],last_name=row[1],position=row[2],cap_hit=0,draft_round=row[4],college=row[5])
 
 def draft_reset():
     draft = Draft.objects.first()
