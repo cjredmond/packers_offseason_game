@@ -31,6 +31,7 @@ class DraftPlayer(models.Model):
     position = models.CharField(max_length=2, choices=POSITION)
     cap_hit = models.IntegerField()
     draft_round = models.IntegerField()
+    college = models.CharField(max_length=100)
 
     def __str__(self):
         return str(self.position + ' ' + self.first_name + " " + self.last_name)

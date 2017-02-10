@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.views.generic import ListView, TemplateView, DetailView
+from django.views.generic.edit import CreateView
+from django.urls import reverse, reverse_lazy
 
-from roster.models import Player, DraftPlayer, FreeAgent
+from roster.models import Player, DraftPlayer, FreeAgent, Draft
 
 class IndexView(TemplateView):
     template_name = "index.html"
@@ -10,7 +12,7 @@ class IndexView(TemplateView):
         context = super().get_context_data(**kwargs)
         total_cap = sum([player.cap_hit for player in Player.objects.all()])
         context['qb'] = Player.objects.filter(position='QB')
-        context['hb'] = Player.objects.filter(position='RB')
+        context['hb'] = Player.objects.filter(position='HB')
         context['wr'] = Player.objects.filter(position='WR')
         context['te'] = Player.objects.filter(position='TE')
         context['ol'] = Player.objects.filter(position='OL')
@@ -22,6 +24,7 @@ class IndexView(TemplateView):
         context['count'] = Player.objects.all().count()
         context['total_cap'] = total_cap
         context['cap_space_left'] = 176 - total_cap
+        print(Player.objects.filter(position='HB'))
         return context
 
 class FreeAgentView(TemplateView):
@@ -42,7 +45,35 @@ class FreeAgentView(TemplateView):
 
 class ReSignView(TemplateView):
     template_name = "resign.html"
-    def get_context_data(self,**kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['players'] = FreeAgent.objects.filter(on_team=True)
         return context
+
+class DraftView(DetailView):
+    model = Draft
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        subject = Draft.objects.get(id=self.kwargs['pk'])
+        context['players'] = DraftPlayer.objects.filter(draft_round=subject.draft_round)
+        return context
+
+class DraftPlayerView(CreateView):
+    model = Player
+    fields = []
+    def get_success_url(self, **kwargs):
+        #target = Draft.objects.get(id=self.kwargs['pk'])
+        return reverse('draft_view', args=('1'))
+    def form_valid(self, form):
+        player_info = DraftPlayer.objects.get(id=self.kwargs['pk'])
+        draft = Draft.objects.get(id=1)
+        draft.draft_round += 1
+        draft.save()
+        instance = form.save(commit=False)
+        instance.first_name = player_info.first_name
+        instance.last_name = player_info.last_name
+        instance.position = player_info.position
+        instance.cap_hit = player_info.cap_hit
+        instance.cut_savings = 0
+        player_info.delete()
+        return super().form_valid(form)

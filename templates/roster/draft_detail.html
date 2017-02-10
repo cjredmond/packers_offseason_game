@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% for player in players %}
+{{ player }} - <a href="{% url 'draft_player_view' player.id %}">DRAFT</a><br>
+{% endfor %}
+{% endblock %}
