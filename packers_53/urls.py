@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.contrib import admin
-from roster.views import IndexView, FreeAgentView, ReSignView, DraftView, DraftPlayerView
+from roster.views import IndexView, FreeAgentView, ReSignView, DraftView, DraftPlayerView, \
+                         ReSignPlayerView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -8,5 +9,6 @@ urlpatterns = [
     url(r'^free-agents/$', FreeAgentView.as_view(), name='free_agent_view'),
     url(r'^re-sign/$', ReSignView.as_view(), name='resign_view'),
     url(r'^draft/(?P<pk>\d+)/$', DraftView.as_view(), name='draft_view'),
-    url(r'^draft/(?P<pk>\d+)/player/$', DraftPlayerView.as_view(), name='draft_player_view')
+    url(r'^draft/(?P<pk>\d+)/player/$', DraftPlayerView.as_view(), name='draft_player_view'),
+    url(r'^re-sign/(?P<pk>\d+)/player/$', ReSignPlayerView.as_view(), name='resign_player_view'),
 ]

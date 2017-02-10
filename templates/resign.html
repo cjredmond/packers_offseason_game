@@ -2,7 +2,7 @@
 {% block content %}
 <h3>Re Sign Players</h3>
 {% for player in players %}
-{{ player }}<br>
+{{ player }} - <a href="{% url 'resign_player_view' player.id %}">Re Sign</a><br>
 {% endfor %}
 
 {% endblock %}
