@@ -23,7 +23,7 @@ class IndexView(TemplateView):
         context['s'] = Player.objects.filter(position='S').order_by('-cap_hit')
         context['count'] = Player.objects.all().count()
         context['total_cap'] = acc.cap
-        context['cap_space_left'] = 171.5 - acc.cap
+        context['cap_space_left'] = acc.cap - 171.5
         return context
 
 class FreeAgentView(TemplateView):
