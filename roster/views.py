@@ -2,14 +2,15 @@ from django.shortcuts import render
 from django.views.generic import ListView, TemplateView, DetailView
 from django.views.generic.edit import CreateView, DeleteView
 from django.urls import reverse, reverse_lazy
-from roster.models import Player, DraftPlayer, FreeAgent, Draft, CapCasualty
+from roster.models import Player, DraftPlayer, FreeAgent, Draft, CapCasualty, Account
 
 class IndexView(TemplateView):
     template_name = "index.html"
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        total_cap = sum([player.cap_hit for player in Player.objects.all()])
+        acc = Account.objects.first()
+        acc.cap = sum([player.cap_hit for player in Player.objects.all()])
         context['qb'] = Player.objects.filter(position='QB').order_by('-cap_hit')
         context['hb'] = Player.objects.filter(position='HB').order_by('-cap_hit')
         context['wr'] = Player.objects.filter(position='WR').order_by('-cap_hit')
@@ -21,8 +22,8 @@ class IndexView(TemplateView):
         context['cb'] = Player.objects.filter(position='CB').order_by('-cap_hit')
         context['s'] = Player.objects.filter(position='S').order_by('-cap_hit')
         context['count'] = Player.objects.all().count()
-        context['total_cap'] = total_cap
-        context['cap_space_left'] = 171.5 - total_cap
+        context['total_cap'] = acc.cap
+        context['cap_space_left'] = 171.5 - acc.cap
         return context
 
 class FreeAgentView(TemplateView):
@@ -66,6 +67,8 @@ class DraftPlayerView(CreateView):
         return reverse('draft_view', args=('1'))
     def form_valid(self, form):
         player_info = DraftPlayer.objects.get(id=self.kwargs['pk'])
+        acc = Account.objects.first()
+        acc.cap += player_info.cap_hit
         draft = Draft.objects.get(id=1)
         draft.draft_round += 1
         draft.save()
@@ -85,6 +88,8 @@ class ReSignPlayerView(CreateView):
         return reverse('resign_view')
     def form_valid(self,form):
         player_info = FreeAgent.objects.get(id=self.kwargs['pk'])
+        acc = Account.objects.first()
+        acc.cap += player_info.cap_hit
         instance = form.save(commit=False)
         instance.first_name = player_info.first_name
         instance.last_name = player_info.last_name
@@ -101,6 +106,8 @@ class FreeAgentSignView(CreateView):
         return reverse('free_agent_view')
     def form_valid(self,form):
         player_info = FreeAgent.objects.get(id=self.kwargs['pk'])
+        acc = Account.objects.first()
+        acc.cap += player_info.cap_hit
         instance = form.save(commit=False)
         instance.first_name = player_info.first_name
         instance.last_name = player_info.last_name
@@ -114,6 +121,8 @@ class CutPlayerView(DeleteView):
     model = Player
     def get_success_url(self,**kwargs):
         player_info = Player.objects.get(id=self.kwargs['pk'])
+        acc = Account.objects.first()
+        acc.cap -= player_info.cut_savings
         FreeAgent.objects.create(first_name=player_info.first_name,last_name=player_info.last_name,
                                  position=player_info.position, cap_hit=player_info.cap_hit, on_team=False)
         return reverse('index_view')
