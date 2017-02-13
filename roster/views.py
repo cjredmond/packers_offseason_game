@@ -10,7 +10,7 @@ class IndexView(TemplateView):
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
         acc = Account.objects.first()
-        acc.cap = sum([player.cap_hit for player in Player.objects.all()])
+        salaries = sum([player.cap_hit for player in Player.objects.all()])
         context['qb'] = Player.objects.filter(position='QB').order_by('-cap_hit')
         context['hb'] = Player.objects.filter(position='HB').order_by('-cap_hit')
         context['wr'] = Player.objects.filter(position='WR').order_by('-cap_hit')
@@ -22,8 +22,8 @@ class IndexView(TemplateView):
         context['cb'] = Player.objects.filter(position='CB').order_by('-cap_hit')
         context['s'] = Player.objects.filter(position='S').order_by('-cap_hit')
         context['count'] = Player.objects.all().count()
-        context['total_cap'] = acc.cap
-        context['cap_space_left'] = acc.cap - 171.5
+        context['total_cap'] = acc.cap_max
+        context['cap_space_left'] = round(acc.cap_max - salaries,2)
         return context
 
 class FreeAgentView(TemplateView):
@@ -67,8 +67,6 @@ class DraftPlayerView(CreateView):
         return reverse('draft_view', args=('1'))
     def form_valid(self, form):
         player_info = DraftPlayer.objects.get(id=self.kwargs['pk'])
-        acc = Account.objects.first()
-        acc.cap += player_info.cap_hit
         draft = Draft.objects.get(id=1)
         draft.draft_round += 1
         draft.save()
@@ -77,7 +75,7 @@ class DraftPlayerView(CreateView):
         instance.last_name = player_info.last_name
         instance.position = player_info.position
         instance.cap_hit = player_info.cap_hit
-        instance.cut_savings = player_info.cap_hit / 2
+        instance.dead_money = player_info.cap_hit * .85
         player_info.delete()
         return super().form_valid(form)
 
@@ -88,14 +86,12 @@ class ReSignPlayerView(CreateView):
         return reverse('resign_view')
     def form_valid(self,form):
         player_info = FreeAgent.objects.get(id=self.kwargs['pk'])
-        acc = Account.objects.first()
-        acc.cap += player_info.cap_hit
         instance = form.save(commit=False)
         instance.first_name = player_info.first_name
         instance.last_name = player_info.last_name
         instance.position = player_info.position
         instance.cap_hit = player_info.cap_hit
-        instance.cut_savings = player_info.cap_hit/2
+        instance.dead_money = player_info.cap_hit * .8
         player_info.delete()
         return super().form_valid(form)
 
@@ -106,14 +102,12 @@ class FreeAgentSignView(CreateView):
         return reverse('free_agent_view')
     def form_valid(self,form):
         player_info = FreeAgent.objects.get(id=self.kwargs['pk'])
-        acc = Account.objects.first()
-        acc.cap += player_info.cap_hit
         instance = form.save(commit=False)
         instance.first_name = player_info.first_name
         instance.last_name = player_info.last_name
         instance.position = player_info.position
         instance.cap_hit = player_info.cap_hit
-        instance.cut_savings = player_info.cap_hit/2
+        instance.dead_money = player_info.cap_hit * 1.25
         player_info.delete()
         return super().form_valid(form)
 
@@ -122,7 +116,10 @@ class CutPlayerView(DeleteView):
     def get_success_url(self,**kwargs):
         player_info = Player.objects.get(id=self.kwargs['pk'])
         acc = Account.objects.first()
-        acc.cap -= player_info.cut_savings
+        print(acc.cap_max)
+        print(acc.cap_max - player_info.dead_money)
+        acc.cap_max -= player_info.dead_money
+        acc.save()
         FreeAgent.objects.create(first_name=player_info.first_name,last_name=player_info.last_name,
                                  position=player_info.position, cap_hit=player_info.cap_hit, on_team=False)
         return reverse('index_view')
@@ -140,7 +137,7 @@ def add_team_player():
         for row in reader:
             print(row[0],row[1])
             Player.objects.create(first_name=row[0],last_name=row[1],position=row[2],cap_hit=row[3],
-            cut_savings=0)
+            dead_money=row[4])
 
 def add_free_agents():
     with open('roster/free_agents.csv') as infile:
