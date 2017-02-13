@@ -5,4 +5,13 @@
 {{ player }} - <a href="{% url 'resign_player_view' player.id %}">Re Sign</a><br>
 {% endfor %}
 
+<form class="" action="{% url 'resign_complete' request.user.account.id %}" method="post">
+  {% csrf_token %}
+  <input type="hidden" name="resign" value="True">
+  <input type="hidden" name="free_agent" value="False">
+  <input type="hidden" name="draft" value="False">
+  <input type="hidden" name="final_cuts" value="False">
+  <input type="submit" name="" value="Done">
+</form>
+
 {% endblock %}

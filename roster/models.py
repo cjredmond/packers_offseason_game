@@ -8,6 +8,11 @@ POSITION = [('QB','Quarterback'), ('HB', 'Running Back'), ('WR', 'Wide Receiver'
 class Account(models.Model):
     user = models.OneToOneField('auth.User')
     cap_max = models.FloatField(default=171.5)
+    resign = models.BooleanField(default=False)
+    free_agent = models.BooleanField(default=False)
+    draft = models.BooleanField(default=False)
+    final_cuts = models.BooleanField(default=False)
+    
 
 class Player(models.Model):
     first_name = models.CharField(max_length=50)

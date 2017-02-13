@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, TemplateView, DetailView
-from django.views.generic.edit import CreateView, DeleteView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse, reverse_lazy
 from roster.models import Player, DraftPlayer, FreeAgent, Draft, CapCasualty, Account
 
@@ -124,6 +124,12 @@ class CutPlayerView(DeleteView):
                                  position=player_info.position, cap_hit=player_info.cap_hit, on_team=False)
         return reverse('index_view')
 
+class ResignCompleteView(UpdateView):
+    model = Account
+    fields = ('resign','free_agent','draft','final_cuts')
+    def get_success_url(self,**kwargs):
+        return reverse('index_view')
+
 
 import csv
 def clear():
@@ -165,6 +171,15 @@ def draft_reset():
     draft.draft_round = 1
     draft.save()
 
+def account_reset():
+    acc = Account.objects.first()
+    acc.resign = False
+    acc.free_agent = False
+    acc.draft = False
+    acc.final_cuts = False
+    acc.cap_max = 171.5
+    acc.save()
+
 def cut_players():
     x = CapCasualty.objects.all().order_by('?')
     for player in x[:20]:
@@ -179,4 +194,5 @@ def seed_db():
     add_free_agents()
     add_cap_casualty()
     cut_players()
+    account_reset()
     draft_reset()
