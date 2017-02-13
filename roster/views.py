@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import ListView, TemplateView, DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView
 from django.urls import reverse, reverse_lazy
-from roster.models import Player, DraftPlayer, FreeAgent, Draft
+from roster.models import Player, DraftPlayer, FreeAgent, Draft, CapCasualty
 
 class IndexView(TemplateView):
     template_name = "index.html"
@@ -60,7 +60,9 @@ class DraftPlayerView(CreateView):
     model = Player
     fields = []
     def get_success_url(self, **kwargs):
-        #target = Draft.objects.get(id=self.kwargs['pk'])
+        target = Draft.objects.first()
+        if target.round == 8:
+            return reverse('index_view')
         return reverse('draft_view', args=('1'))
     def form_valid(self, form):
         player_info = DraftPlayer.objects.get(id=self.kwargs['pk'])
@@ -108,6 +110,15 @@ class FreeAgentSignView(CreateView):
         player_info.delete()
         return super().form_valid(form)
 
+class CutPlayerView(DeleteView):
+    model = Player
+    def get_success_url(self,**kwargs):
+        player_info = Player.objects.get(id=self.kwargs['pk'])
+        FreeAgent.objects.create(first_name=player_info.first_name,last_name=player_info.last_name,
+                                 position=player_info.position, cap_hit=player_info.cap_hit, on_team=False)
+        return reverse('index_view')
+
+
 import csv
 def clear():
     Player.objects.all().delete()
@@ -137,7 +148,7 @@ def add_draft():
             DraftPlayer.objects.create(first_name=row[0],last_name=row[1],position=row[2],cap_hit=row[3],draft_round=row[4],college=row[5])
 
 def add_cap_casualty():
-    with open('cap_casualty.csv') as infile:
+    with open('roster/cap_casualty.csv') as infile:
         reader = csv.reader(infile)
         for row in reader:
             print(row[0],row[1])
@@ -145,5 +156,21 @@ def add_cap_casualty():
 
 def draft_reset():
     draft = Draft.objects.first()
-    draft.round = 1
+    draft.draft_round = 1
     draft.save()
+
+def cut_players():
+    x = CapCasualty.objects.all().order_by('?')
+    for player in x[:20]:
+        FreeAgent.objects.create(first_name=player.first_name, last_name=player.last_name,
+                                 position=player.position, cap_hit=player.cap_hit, on_team=False)
+
+
+def seed_db():
+    clear()
+    add_team_player()
+    add_draft()
+    add_free_agents()
+    add_cap_casualty()
+    cut_players()
+    draft_reset()

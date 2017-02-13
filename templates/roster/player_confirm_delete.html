@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form class="" action="" method="post">
+  {% csrf_token %}
+  <p>
+    You are about to cut {{ object }}
+  </p>
+  <input type="submit" name="" value="CUT">
+  <a href="{% url 'index_view' %}">NO</a>
+</form>
+{% endblock %}

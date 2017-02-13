@@ -6,49 +6,49 @@
   <div class="col-md-2">
     <h3>QB</h3>
     {% for player in qb %}
-    {{ player }}: {{ player.cap_hit }}<br>
+    {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
     {% endfor %}
     <h3>HB</h3>
     {% for player in hb %}
-    {{ player }}: {{ player.cap_hit }}<br>
+    {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
     {% endfor %}
     <h3>WR</h3>
     {% for player in wr %}
-    {{ player }}: {{ player.cap_hit }}<br>
+    {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
     {% endfor %}
   </div>
   <div class="col-md-3">
     <h3>TE</h3>
     {% for player in te %}
-    {{ player }}: {{ player.cap_hit }}<br>
+    {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
     {% endfor %}
     <h3>OL</h3>
     {% for player in ol %}
-    {{ player }}: {{ player.cap_hit }}<br>
+    {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
     {% endfor %}
   </div>
   <div class="col-md-2">
     <h3>DL</h3>
     {% for player in dl %}
-    {{ player }}: {{ player.cap_hit }}<br>
+    {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
     {% endfor %}
     <h3>ED</h3>
     {% for player in ed %}
-    {{ player }}: {{ player.cap_hit }}<br>
+    {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
     {% endfor %}
   </div>
   <div class="col-md-2">
     <h3>ILB</h3>
     {% for player in lb %}
-    {{ player }}: {{ player.cap_hit }}<br>
+    {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
     {% endfor %}
     <h3>CB</h3>
     {% for player in cb %}
-    {{ player }}: {{ player.cap_hit }}<br>
+    {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
     {% endfor %}
     <h3>S</h3>
     {% for player in s %}
-    {{ player }}: {{ player.cap_hit }}<br>
+    {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
     {% endfor %}
   </div>
   <div class="col-md-3">
