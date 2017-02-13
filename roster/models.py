@@ -36,5 +36,11 @@ class DraftPlayer(models.Model):
     def __str__(self):
         return str(self.position + ' ' + self.first_name + " " + self.last_name)
 
+class CapCasualty(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    position = models.CharField(max_length=2, choices=POSITION)
+    cap_hit = models.FloatField()
+
 class Draft(models.Model):
     draft_round = models.IntegerField(default=1)

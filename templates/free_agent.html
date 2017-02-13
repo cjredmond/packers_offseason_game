@@ -17,139 +17,56 @@
   <div id="qb" class="tab-pane fade in active">
     <h3>QB</h3>
     {% for player in qb %}
-    {{ player }}
+    {{ player }} {{ player.cap_hit }} <a href="{% url 'free_agent_sign_view' player.id %}">Sign</a><br>
     {% endfor %}
   </div>
   <div id="hb" class="tab-pane fade">
     <h3>HB</h3>
     {% for player in hb %}
-    {{ player }}<br>
+    {{ player }} {{ player.cap_hit }} <a href="{% url 'free_agent_sign_view' player.id %}">Sign</a><br>
     {% endfor %}
   </div>
   <div id="wr" class="tab-pane fade">
     <h3>WR</h3>
     {% for player in wr %}
-    {{ player }}<br>
+    {{ player }} {{ player.cap_hit }} <a href="{% url 'free_agent_sign_view' player.id %}">Sign</a><br>
     {% endfor %}
   </div>
   <div id="te" class="tab-pane fade">
     {% for player in te %}
-    {{ player }}<br>
+    {{ player }} {{ player.cap_hit }} <a href="{% url 'free_agent_sign_view' player.id %}">Sign</a><br>
     {% endfor %}
   </div>
   <div id="ol" class="tab-pane fade">
     {% for player in ol %}
-    {{ player }}<br>
+    {{ player }} {{ player.cap_hit }} <a href="{% url 'free_agent_sign_view' player.id %}">Sign</a><br>
     {% endfor %}
   </div>
   <div id="dl" class="tab-pane fade">
     {% for player in dl %}
-    {{ player }}<br>
+    {{ player }} {{ player.cap_hit }} <a href="{% url 'free_agent_sign_view' player.id %}">Sign</a><br>
     {% endfor %}
   </div>
   <div id="ed" class="tab-pane fade">
     {% for player in ed %}
-    {{ player }}<br>
+    {{ player }} {{ player.cap_hit }} <a href="{% url 'free_agent_sign_view' player.id %}">Sign</a><br>
     {% endfor %}
   </div>
   <div id="lb" class="tab-pane fade">
     {% for player in lb %}
-    {{ player }}<br>
+    {{ player }} {{ player.cap_hit }} <a href="{% url 'free_agent_sign_view' player.id %}">Sign</a><br>
     {% endfor %}
   </div>
   <div id="cb" class="tab-pane fade">
     {% for player in cb %}
-    {{ player }}<br>
+    {{ player }} {{ player.cap_hit }} <a href="{% url 'free_agent_sign_view' player.id %}">Sign</a><br>
     {% endfor %}
   </div>
   <div id="s" class="tab-pane fade">
     {% for player in s %}
-    {{ player }}<br>
+    {{ player }} {{ player.cap_hit }} <a href="{% url 'free_agent_sign_view' player.id %}">Sign</a><br>
     {% endfor %}
   </div>
 </div>
 
-<!--
-<div class="row">
-<div class="col-md-12">
-  <ul class="nav nav-tabs">
-    <li class="tab col-md-1"><a data-toggle="tab" href="#qb">QB</a></li>
-    <li class="tab col-md-1"><a data-toggle="tab" href="#rb">RB</a></li>
-    <li class="tab col-md-1"><a data-toggle="tab" href="#wr">WR</a></li>
-    <li class="tab col-md-1"><a data-toggle="tab" href="#te">TE</a></li>
-    <li class="tab col-md-1"><a data-toggle="tab" href="#ol">OL</a></li>
-    <li class="tab col-md-1"><a data-toggle="tab" href="#dl">DL</a></li>
-    <li class="tab col-md-1"><a data-toggle="tab" href="#ed">ED</a></li>
-    <li class="tab col-md-1"><a data-toggle="tab" href="#lb">LB</a></li>
-    <li class="tab col-md-1"><a data-toggle="tab" href="#cb">CB</a></li>
-    <li class="tab col-md-1"><a data-toggle="tab" href="#s">S</a></li>
-  </ul>
-</div>
-<div id="qb" class="col-md-12">
-  {% for player in qb %}
-  {{ player }}
-  {% endfor %}
-</div>
-<div id="hb" class="col-md-12">
-  {% for player in hb %}
-  {{ player }}
-  {% endfor %}
-</div>
-<div id="wr" class="col-md-12">
-  {% for player in wr %}
-  {{ player }}
-  {% endfor %}
-</div>
-<div id="te" class="col-md-12">
-  {% for player in te %}
-  {{ player }}
-  {% endfor %}
-</div>
-<div id="ol" class="col-md-12">
-  {% for player in ol %}
-  {{ player }}
-  {% endfor %}
-</div>
-<div id="dl" class="col-md-12">
-  {% for player in dl %}
-  {{ player }}
-  {% endfor %}
-</div>
-<div id="ed" class="col-md-12">
-  {% for player in ed %}
-  {{ player }}
-  {% endfor %}
-</div>
-<div id="lb" class="col-md-12">
-  {% for player in lb %}
-  {{ player }}
-  {% endfor %}
-</div>
-<div id="cb" class="col-md-12">
-  {% for player in cb %}
-  {{ player }}
-  {% endfor %}
-</div>
-<div id="s" class="col-md-12">
-  {% for player in s %}
-  {{ player }}
-  {% endfor %}
-</div>
-
-</div> -->
-<!-- <input type="button" class="btn" value="COLOR" onclick="chBackcolor();">
 {% endblock %}
-
-{% block extrascript %}
-<script type="text/javascript">
-  $(document).ready(function(){
-    $('ul.tabs').tabs();
-  });
-
-  var myColors = ['red', 'blue']
-  function chBackcolor() {
-    var randomize = Math.floor(Math.random()*myColors.length);
-    document.body.style.background = myColors[randomize];
-  }
-</script>
-{% endblock %} -->

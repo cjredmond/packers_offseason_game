@@ -10,16 +10,16 @@ class IndexView(TemplateView):
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
         total_cap = sum([player.cap_hit for player in Player.objects.all()])
-        context['qb'] = Player.objects.filter(position='QB')
-        context['hb'] = Player.objects.filter(position='HB')
-        context['wr'] = Player.objects.filter(position='WR')
-        context['te'] = Player.objects.filter(position='TE')
-        context['ol'] = Player.objects.filter(position='OL')
-        context['dl'] = Player.objects.filter(position='DL')
-        context['ed'] = Player.objects.filter(position='ED')
-        context['lb'] = Player.objects.filter(position='LB')
-        context['cb'] = Player.objects.filter(position='CB')
-        context['s'] = Player.objects.filter(position='S')
+        context['qb'] = Player.objects.filter(position='QB').order_by('-cap_hit')
+        context['hb'] = Player.objects.filter(position='HB').order_by('-cap_hit')
+        context['wr'] = Player.objects.filter(position='WR').order_by('-cap_hit')
+        context['te'] = Player.objects.filter(position='TE').order_by('-cap_hit')
+        context['ol'] = Player.objects.filter(position='OL').order_by('-cap_hit')
+        context['dl'] = Player.objects.filter(position='DL').order_by('-cap_hit')
+        context['ed'] = Player.objects.filter(position='ED').order_by('-cap_hit')
+        context['lb'] = Player.objects.filter(position='LB').order_by('-cap_hit')
+        context['cb'] = Player.objects.filter(position='CB').order_by('-cap_hit')
+        context['s'] = Player.objects.filter(position='S').order_by('-cap_hit')
         context['count'] = Player.objects.all().count()
         context['total_cap'] = total_cap
         context['cap_space_left'] = 171.5 - total_cap
@@ -29,16 +29,16 @@ class FreeAgentView(TemplateView):
     template_name = "free_agent.html"
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['qb'] = FreeAgent.objects.filter(position='QB',on_team=False)
-        context['hb'] = FreeAgent.objects.filter(position='RB',on_team=False)
-        context['wr'] = FreeAgent.objects.filter(position='WR',on_team=False)
-        context['te'] = FreeAgent.objects.filter(position='TE',on_team=False)
-        context['ol'] = FreeAgent.objects.filter(position='OL',on_team=False)
-        context['dl'] = FreeAgent.objects.filter(position='DL',on_team=False)
-        context['ed'] = FreeAgent.objects.filter(position='ED',on_team=False)
-        context['lb'] = FreeAgent.objects.filter(position='LB',on_team=False)
-        context['cb'] = FreeAgent.objects.filter(position='CB',on_team=False)
-        context['s'] = FreeAgent.objects.filter(position='S',on_team=False)
+        context['qb'] = FreeAgent.objects.filter(position='QB',on_team=False).order_by('-cap_hit')
+        context['hb'] = FreeAgent.objects.filter(position='RB',on_team=False).order_by('-cap_hit')
+        context['wr'] = FreeAgent.objects.filter(position='WR',on_team=False).order_by('-cap_hit')
+        context['te'] = FreeAgent.objects.filter(position='TE',on_team=False).order_by('-cap_hit')
+        context['ol'] = FreeAgent.objects.filter(position='OL',on_team=False).order_by('-cap_hit')
+        context['dl'] = FreeAgent.objects.filter(position='DL',on_team=False).order_by('-cap_hit')
+        context['ed'] = FreeAgent.objects.filter(position='ED',on_team=False).order_by('-cap_hit')
+        context['lb'] = FreeAgent.objects.filter(position='LB',on_team=False).order_by('-cap_hit')
+        context['cb'] = FreeAgent.objects.filter(position='CB',on_team=False).order_by('-cap_hit')
+        context['s'] = FreeAgent.objects.filter(position='S',on_team=False).order_by('-cap_hit')
         return context
 
 class ReSignView(TemplateView):
@@ -88,14 +88,25 @@ class ReSignPlayerView(CreateView):
         instance.last_name = player_info.last_name
         instance.position = player_info.position
         instance.cap_hit = player_info.cap_hit
-        instance.cut_savings = -(player_info.cap_hit/2)
+        instance.cut_savings = player_info.cap_hit/2
         player_info.delete()
         return super().form_valid(form)
 
 class FreeAgentSignView(CreateView):
     model = Player
-    
-
+    fields = []
+    def get_success_url(self,**kwargs):
+        return reverse('free_agent_view')
+    def form_valid(self,form):
+        player_info = FreeAgent.objects.get(id=self.kwargs['pk'])
+        instance = form.save(commit=False)
+        instance.first_name = player_info.first_name
+        instance.last_name = player_info.last_name
+        instance.position = player_info.position
+        instance.cap_hit = player_info.cap_hit
+        instance.cut_savings = player_info.cap_hit/2
+        player_info.delete()
+        return super().form_valid(form)
 
 import csv
 def clear():
@@ -124,6 +135,13 @@ def add_draft():
         for row in reader:
             print(row[0],row[1])
             DraftPlayer.objects.create(first_name=row[0],last_name=row[1],position=row[2],cap_hit=row[3],draft_round=row[4],college=row[5])
+
+def add_cap_casualty():
+    with open('cap_casualty.csv') as infile:
+        reader = csv.reader(infile)
+        for row in reader:
+            print(row[0],row[1])
+            CapCasualty.objects.create(first_name=row[0],last_name=row[1],position=row[2],cap_hit=row[3])
 
 def draft_reset():
     draft = Draft.objects.first()
