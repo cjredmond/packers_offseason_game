@@ -4,4 +4,15 @@
 {% for player in players %}
 {{ player }} - <a href="{% url 'draft_player_view' player.id %}">DRAFT</a><br>
 {% endfor %}
+
+{% if draft.objects.first.draft_round == 8 %}
+<form class="" action="{% url 'resign_complete' request.user.account.id %}" method="post">
+  {% csrf_token %}
+  <input type="hidden" name="resign" value="True">
+  <input type="hidden" name="free_agent" value="True">
+  <input type="hidden" name="draft" value="True">
+  <input type="hidden" name="final_cuts" value="False">
+  <input type="submit" name="" value="Done">
+</form>
+{% endif %}
 {% endblock %}

@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Index</h1>
+{% if request.user.account.free_agent and request.user.account.draft %}
+<h4>You need to cut down to 53 players</h4>
+{% endif %}
+
+
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href=#offense>Offense</a></li>
   <li><a data-toggle="tab" href=#defense>Defense</a></li>
@@ -10,66 +15,149 @@
 <div class="tab-content">
   <div id="offense" class="tab-pane fade in active">
     <div class="row">
-      <div class="col-md-4">
-        <h4>QB</h4>
-        {% for player in qb %}
-        {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
-        {% endfor %}
-        <h4>HB</h4>
-        {% for player in hb %}
-        {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
-        {% endfor %}
-      </div>
-      <div class="col-md-4">
-        <h4>WR</h4>
-        {% for player in wr %}
-        {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
-        {% endfor %}
-        <h4>TE</h4>
-        {% for player in te %}
-        {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
-        {% endfor %}
-      </div>
-        <div class="col-md-4">
-          <h4>OL</h4>
-          {% for player in ol %}
-          {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
-          {% endfor %}
+      <div class="col-md-7">
+        <div class="row">
+          <div class="col-md-5">Quarterback</div>
+          <div class="col-md-2">Cap Hit</div>
+          <div class="col-md-2">Dead Money</div>
         </div>
+        {% for player in qb %}
+        <div class="row">
+          <div class="col-md-5">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit }}</div>
+          <div class="col-md-2">{{ player.dead_money }}</div>
+          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+        </div>
+        {% endfor %}
+        <div class="row">
+          <div class="col-md-5">Running Back</div>
+          <div class="col-md-2">Cap Hit</div>
+          <div class="col-md-2">Dead Money</div>
+        </div>
+        {% for player in hb %}
+        <div class="row">
+          <div class="col-md-5">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit }}</div>
+          <div class="col-md-2">{{ player.dead_money }}</div>
+          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+        </div>
+        {% endfor %}
+        <div class="row">
+          <div class="col-md-5">Offensive Line</div>
+          <div class="col-md-2">Cap Hit</div>
+          <div class="col-md-2">Dead Money</div>
+        </div>
+        {% for player in ol %}
+        <div class="row">
+          <div class="col-md-5">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit }}</div>
+          <div class="col-md-2">{{ player.dead_money }}</div>
+          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+        </div>
+        {% endfor %}
+        <div class="row">
+          <div class="col-md-5">Tight End</div>
+          <div class="col-md-2">Cap Hit</div>
+          <div class="col-md-2">Dead Money</div>
+        </div>
+        {% for player in te %}
+        <div class="row">
+          <div class="col-md-5">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit|floatformat }}</div>
+          <div class="col-md-2">{{ player.dead_money|floatformat }}</div>
+          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+        </div>
+        {% endfor %}
+        <div class="row">
+          <div class="col-md-5">Wide Receiver</div>
+          <div class="col-md-2">Cap Hit</div>
+          <div class="col-md-2">Dead Money</div>
+        </div>
+        {% for player in wr %}
+        <div class="row">
+          <div class="col-md-5">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit }}</div>
+          <div class="col-md-2">{{ player.dead_money }}</div>
+          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+        </div>
+        {% endfor %}
+      </div>
       </div>
     </div>
     <div id="defense" class="tab-pane fade in active">
     <div class="row">
-      <div class="col-md-4">
-        <h3>DL</h3>
+      <div class="col-md-7">
+        <div class="row">
+          <div class="col-md-5">Defensive Line</div>
+          <div class="col-md-2">Cap Hit</div>
+          <div class="col-md-2">Dead Money</div>
+        </div>
         {% for player in dl %}
-        {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
+        <div class="row">
+          <div class="col-md-5">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit }}</div>
+          <div class="col-md-2">{{ player.dead_money }}</div>
+          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+        </div>
         {% endfor %}
-        <h3>ILB</h3>
-        {% for player in lb %}
-        {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
-        {% endfor %}
-      </div>
-      <div class="col-md-4">
-        <h3>ED</h3>
+        <div class="row">
+          <div class="col-md-5">Edge Rusher</div>
+          <div class="col-md-2">Cap Hit</div>
+          <div class="col-md-2">Dead Money</div>
+        </div>
         {% for player in ed %}
-        {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
+        <div class="row">
+          <div class="col-md-5">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit }}</div>
+          <div class="col-md-2">{{ player.dead_money }}</div>
+          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+        </div>
         {% endfor %}
-        <h3>S</h3>
-        {% for player in s %}
-        {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
+        <div class="row">
+          <div class="col-md-5">Linebacker</div>
+          <div class="col-md-2">Cap Hit</div>
+          <div class="col-md-2">Dead Money</div>
+        </div>
+        {% for player in lb %}
+        <div class="row">
+          <div class="col-md-5">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit }}</div>
+          <div class="col-md-2">{{ player.dead_money }}</div>
+          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+        </div>
         {% endfor %}
-      </div>
-      <div class="col-md-4">
-        <h3>CB</h3>
+        <div class="row">
+          <div class="col-md-5">Cornerback</div>
+          <div class="col-md-2">Cap Hit</div>
+          <div class="col-md-2">Dead Money</div>
+        </div>
         {% for player in cb %}
-        {{ player }}: {{ player.cap_hit }} <a href="{% url 'cut_player_view' player.id %}">Cut</a><br>
+        <div class="row">
+          <div class="col-md-5">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit }}</div>
+          <div class="col-md-2">{{ player.dead_money }}</div>
+          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+        </div>
         {% endfor %}
-
+        <div class="row">
+          <div class="col-md-5">Safety</div>
+          <div class="col-md-2">Cap Hit</div>
+          <div class="col-md-2">Dead Money</div>
+        </div>
+        {% for player in s %}
+        <div class="row">
+          <div class="col-md-5">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit }}</div>
+          <div class="col-md-2">{{ player.dead_money }}</div>
+          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+        </div>
+        {% endfor %}
       </div>
-    </div>
+
+
     </div>
   </div>
+</div>
 
 
 {% endblock %}

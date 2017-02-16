@@ -13,8 +13,13 @@
     <nav class="nav navbar">
       <ul>
         <li><a href="{% url 'index_view' %}">Team</a></li>
-        <li><a href="{% url 'free_agent_view' %}">Free Agents</a></li>
+        {% if request.user.account.resign == False %}
         <li><a href="{% url 'resign_view' %}">Re Sign</a></li>
+        {% elif request.user.account.free_agent == False %}
+        <li><a href="{% url 'free_agent_view' %}">Free Agents</a></li>
+        {% else %}
+        <li><a href="{% url 'draft_view' 1 %}">Draft</a></li>
+        {% endif %}
       </ul>
     </nav>
     <div class="container">
