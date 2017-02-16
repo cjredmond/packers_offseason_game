@@ -1,21 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Index</h1>
+<p>Start <span>Next</span> <span>Next</span></p>
 {% if request.user.account.free_agent and request.user.account.draft %}
 <h4>You need to cut down to 53 players</h4>
 {% endif %}
 
+{% if request.user.account.draft and count < 54 %}
+<h3>finished</h3>
+{% endif %}
 
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href=#offense>Offense</a></li>
   <li><a data-toggle="tab" href=#defense>Defense</a></li>
 </ul>
 
-
+<div class="row">
+<div class="col-md-7">
 <div class="tab-content">
   <div id="offense" class="tab-pane fade in active">
     <div class="row">
-      <div class="col-md-7">
         <div class="row">
           <div class="col-md-5">Quarterback</div>
           <div class="col-md-2">Cap Hit</div>
@@ -82,11 +85,9 @@
         </div>
         {% endfor %}
       </div>
-      </div>
     </div>
-    <div id="defense" class="tab-pane fade in active">
+    <div id="defense" class="tab-pane fade in">
     <div class="row">
-      <div class="col-md-7">
         <div class="row">
           <div class="col-md-5">Defensive Line</div>
           <div class="col-md-2">Cap Hit</div>
@@ -152,12 +153,33 @@
           <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
         </div>
         {% endfor %}
-      </div>
 
 
     </div>
   </div>
 </div>
-
+</div>
+<div class="col-md-5">
+  <h4>Total Cap: {{ total_cap }}</h4>
+  <h4>Total Salary: {{ salaries }}</h4>
+  <h4>Room: {{ cap_space_left }}</h4>
+  <h4>Players: {{ count }}/53 </h4>
+  <h4>Roster Breakdown:</h4>
+  <div class="col-md-6">
+    <p>QB: {{ qb.count }}</p>
+    <p>HB: {{ hb.count }}</p>
+    <p>OL: {{ ol.count }}</p>
+    <p>TE: {{ te.count }}</p>
+    <p>WR: {{ wr.count }}</p>
+  </div>
+  <div class="col-md-6">
+    <p>DL: {{ dl.count }}</p>
+    <p>ED: {{ ed.count }}</p>
+    <p>LB: {{ lb.count }}</p>
+    <p>S: {{ s.count }}</p>
+    <p>CB: {{ cb.count }}</p>
+  </div>
+</div>
+</div>
 
 {% endblock %}

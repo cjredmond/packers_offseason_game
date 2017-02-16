@@ -24,6 +24,7 @@ class IndexView(TemplateView):
         context['count'] = Player.objects.all().count()
         context['total_cap'] = acc.cap_max
         context['cap_space_left'] = round(acc.cap_max - salaries,2)
+        context['salaries'] = round(salaries, 2)
         return context
 
 class FreeAgentView(TemplateView):
@@ -62,7 +63,10 @@ class DraftPlayerView(CreateView):
     fields = []
     def get_success_url(self, **kwargs):
         target = Draft.objects.first()
-        if target.round == 8:
+        if target.draft_round == 8:
+            acc = Account.objects.first()
+            acc.draft = True
+            acc.save()
             return reverse('index_view')
         return reverse('draft_view', args=('1'))
     def form_valid(self, form):

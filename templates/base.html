@@ -17,8 +17,10 @@
         <li><a href="{% url 'resign_view' %}">Re Sign</a></li>
         {% elif request.user.account.free_agent == False %}
         <li><a href="{% url 'free_agent_view' %}">Free Agents</a></li>
-        {% else %}
+        {% elif request.user.account.draft == False %}
         <li><a href="{% url 'draft_view' 1 %}">Draft</a></li>
+        {% else %}
+        <li><a href="{% url 'index_view' %}">Final Cuts</a></li>
         {% endif %}
       </ul>
     </nav>
