@@ -1,87 +1,84 @@
 {% extends 'base.html' %}
 {% block content %}
-<p>Start <span>Next</span> <span>Next</span></p>
+<div class="">
+  {% if not request.user.account.resign %}
+  <p>Start</p>
+  {% elif not request.user.account.free_agent %}
+  <p>Start, Resign Players <span class='blue'>Free Agents</span></p>
+  {% elif not request.user.account.draft %}
+  <p>Start, Resign Players, Free Agents <span class='blue'>Draft</span></p>
+  {% elif not request.user.account.final_cuts %}
+  <p>Start, Resign Players, Free Agents, Draft <span class='blue'>Final Cuts</span></p>
+  {% endif %}
+</div>
 {% if request.user.account.free_agent and request.user.account.draft %}
+{% if count > 53 %}
 <h4>You need to cut down to 53 players</h4>
+{% endif %}
 {% endif %}
 
 {% if request.user.account.draft and count < 54 %}
 <h3>finished</h3>
 {% endif %}
 
+<div class="row">
+<div class="col-md-1"></div>
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href=#offense>Offense</a></li>
   <li><a data-toggle="tab" href=#defense>Defense</a></li>
 </ul>
+</div>
 
 <div class="row">
+  <div class="col-md-1"></div>
+
 <div class="col-md-7">
 <div class="tab-content">
   <div id="offense" class="tab-pane fade in active">
     <div class="row">
         <div class="row">
-          <div class="col-md-5">Quarterback</div>
+          <div class="col-md-4">Player</div>
           <div class="col-md-2">Cap Hit</div>
           <div class="col-md-2">Dead Money</div>
         </div>
         {% for player in qb %}
         <div class="row">
-          <div class="col-md-5">{{ player }}</div>
-          <div class="col-md-2">{{ player.cap_hit }}</div>
-          <div class="col-md-2">{{ player.dead_money }}</div>
-          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
-        </div>
-        {% endfor %}
-        <div class="row">
-          <div class="col-md-5">Running Back</div>
-          <div class="col-md-2">Cap Hit</div>
-          <div class="col-md-2">Dead Money</div>
-        </div>
-        {% for player in hb %}
-        <div class="row">
-          <div class="col-md-5">{{ player }}</div>
-          <div class="col-md-2">{{ player.cap_hit }}</div>
-          <div class="col-md-2">{{ player.dead_money }}</div>
-          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
-        </div>
-        {% endfor %}
-        <div class="row">
-          <div class="col-md-5">Offensive Line</div>
-          <div class="col-md-2">Cap Hit</div>
-          <div class="col-md-2">Dead Money</div>
-        </div>
-        {% for player in ol %}
-        <div class="row">
-          <div class="col-md-5">{{ player }}</div>
-          <div class="col-md-2">{{ player.cap_hit }}</div>
-          <div class="col-md-2">{{ player.dead_money }}</div>
-          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
-        </div>
-        {% endfor %}
-        <div class="row">
-          <div class="col-md-5">Tight End</div>
-          <div class="col-md-2">Cap Hit</div>
-          <div class="col-md-2">Dead Money</div>
-        </div>
-        {% for player in te %}
-        <div class="row">
-          <div class="col-md-5">{{ player }}</div>
+          <div class="col-md-4">{{ player }}</div>
           <div class="col-md-2">{{ player.cap_hit|floatformat }}</div>
           <div class="col-md-2">{{ player.dead_money|floatformat }}</div>
-          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+          <div class="col-md-1"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
         </div>
         {% endfor %}
+        {% for player in hb %}
         <div class="row">
-          <div class="col-md-5">Wide Receiver</div>
-          <div class="col-md-2">Cap Hit</div>
-          <div class="col-md-2">Dead Money</div>
+          <div class="col-md-4">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit|floatformat }}</div>
+          <div class="col-md-2">{{ player.dead_money|floatformat }}</div>
+          <div class="col-md-1"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
         </div>
+        {% endfor %}
+        {% for player in ol %}
+        <div class="row">
+          <div class="col-md-4">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit|floatformat }}</div>
+          <div class="col-md-2">{{ player.dead_money|floatformat }}</div>
+          <div class="col-md-1"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+        </div>
+        {% endfor %}
+        {% for player in te %}
+        <div class="row">
+          <div class="col-md-4">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit|floatformat }}</div>
+          <div class="col-md-2">{{ player.dead_money|floatformat }}</div>
+          <div class="col-md-1"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+        </div>
+        {% endfor %}
         {% for player in wr %}
         <div class="row">
-          <div class="col-md-5">{{ player }}</div>
-          <div class="col-md-2">{{ player.cap_hit }}</div>
-          <div class="col-md-2">{{ player.dead_money }}</div>
-          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+          <div class="col-md-4">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit|floatformat }}</div>
+          <div class="col-md-2">{{ player.dead_money|floatformat }}</div>
+          <div class="col-md-1"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
         </div>
         {% endfor %}
       </div>
@@ -89,68 +86,48 @@
     <div id="defense" class="tab-pane fade in">
     <div class="row">
         <div class="row">
-          <div class="col-md-5">Defensive Line</div>
+          <div class="col-md-4">Player</div>
           <div class="col-md-2">Cap Hit</div>
           <div class="col-md-2">Dead Money</div>
         </div>
         {% for player in dl %}
         <div class="row">
-          <div class="col-md-5">{{ player }}</div>
-          <div class="col-md-2">{{ player.cap_hit }}</div>
-          <div class="col-md-2">{{ player.dead_money }}</div>
-          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+          <div class="col-md-4">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit|floatformat }}</div>
+          <div class="col-md-2">{{ player.dead_money|floatformat }}</div>
+          <div class="col-md-1"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
         </div>
         {% endfor %}
-        <div class="row">
-          <div class="col-md-5">Edge Rusher</div>
-          <div class="col-md-2">Cap Hit</div>
-          <div class="col-md-2">Dead Money</div>
-        </div>
         {% for player in ed %}
         <div class="row">
-          <div class="col-md-5">{{ player }}</div>
-          <div class="col-md-2">{{ player.cap_hit }}</div>
-          <div class="col-md-2">{{ player.dead_money }}</div>
-          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+          <div class="col-md-4">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit|floatformat }}</div>
+          <div class="col-md-2">{{ player.dead_money|floatformat }}</div>
+          <div class="col-md-1"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
         </div>
         {% endfor %}
-        <div class="row">
-          <div class="col-md-5">Linebacker</div>
-          <div class="col-md-2">Cap Hit</div>
-          <div class="col-md-2">Dead Money</div>
-        </div>
         {% for player in lb %}
         <div class="row">
-          <div class="col-md-5">{{ player }}</div>
-          <div class="col-md-2">{{ player.cap_hit }}</div>
-          <div class="col-md-2">{{ player.dead_money }}</div>
-          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+          <div class="col-md-4">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit|floatformat }}</div>
+          <div class="col-md-2">{{ player.dead_money|floatformat }}</div>
+          <div class="col-md-1"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
         </div>
         {% endfor %}
-        <div class="row">
-          <div class="col-md-5">Cornerback</div>
-          <div class="col-md-2">Cap Hit</div>
-          <div class="col-md-2">Dead Money</div>
-        </div>
         {% for player in cb %}
         <div class="row">
-          <div class="col-md-5">{{ player }}</div>
-          <div class="col-md-2">{{ player.cap_hit }}</div>
-          <div class="col-md-2">{{ player.dead_money }}</div>
-          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+          <div class="col-md-4">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit|floatformat }}</div>
+          <div class="col-md-2">{{ player.dead_money|floatformat }}</div>
+          <div class="col-md-1"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
         </div>
         {% endfor %}
-        <div class="row">
-          <div class="col-md-5">Safety</div>
-          <div class="col-md-2">Cap Hit</div>
-          <div class="col-md-2">Dead Money</div>
-        </div>
         {% for player in s %}
         <div class="row">
-          <div class="col-md-5">{{ player }}</div>
-          <div class="col-md-2">{{ player.cap_hit }}</div>
-          <div class="col-md-2">{{ player.dead_money }}</div>
-          <div class="col-md-2"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
+          <div class="col-md-4">{{ player }}</div>
+          <div class="col-md-2">{{ player.cap_hit|floatformat }}</div>
+          <div class="col-md-2">{{ player.dead_money|floatformat }}</div>
+          <div class="col-md-1"><a href="{% url 'cut_player_view' player.id %}">Cut</a></div>
         </div>
         {% endfor %}
 
@@ -159,10 +136,10 @@
   </div>
 </div>
 </div>
-<div class="col-md-5">
-  <h4>Total Cap: {{ total_cap }}</h4>
-  <h4>Total Salary: {{ salaries }}</h4>
-  <h4>Room: {{ cap_space_left }}</h4>
+<div class="col-md-4">
+  <h4>Total Cap: {{ total_cap|floatformat }}</h4>
+  <h4>Total Salary: {{ salaries|floatformat }}</h4>
+  <h4>Room: {{ cap_space_left|floatformat }}</h4>
   <h4>Players: {{ count }}/53 </h4>
   <h4>Roster Breakdown:</h4>
   <div class="col-md-6">
