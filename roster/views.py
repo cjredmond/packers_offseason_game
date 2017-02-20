@@ -134,8 +134,16 @@ class ResignCompleteView(UpdateView):
     def get_success_url(self,**kwargs):
         return reverse('index_view')
 
-
+import random
 import csv
+
+def randomizer():
+    choices = [.8,.85,.9,1,1,1.1,1.2,1.25]
+    return random.choice(choices)
+
+def randomize_player_cost(number, choice):
+    return round(float(number)*float(choice),1)
+
 def clear():
     Player.objects.all().delete()
     DraftPlayer.objects.all().delete()
@@ -154,7 +162,7 @@ def add_free_agents():
         reader = csv.reader(infile)
         for row in reader:
             print(row[0],row[1])
-            FreeAgent.objects.create(first_name=row[0],last_name=row[1],position=row[2],cap_hit=row[3],on_team=row[4])
+            FreeAgent.objects.create(first_name=row[0],last_name=row[1],position=row[2],cap_hit=row[3],on_team=row[4],modified_cost=randomize_player_cost(row[3],randomizer()))
 
 def add_draft():
     with open('roster/draft.csv') as infile:
@@ -188,7 +196,8 @@ def cut_players():
     x = CapCasualty.objects.all().order_by('?')
     for player in x[:20]:
         FreeAgent.objects.create(first_name=player.first_name, last_name=player.last_name,
-                                 position=player.position, cap_hit=player.cap_hit, on_team=False)
+                                 position=player.position, cap_hit=player.cap_hit, on_team=False,
+                                 modified_cost=randomize_player_cost(player.cap_hit,randomizer()))
 
 
 def seed_db():

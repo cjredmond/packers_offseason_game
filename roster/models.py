@@ -12,7 +12,7 @@ class Account(models.Model):
     free_agent = models.BooleanField(default=False)
     draft = models.BooleanField(default=False)
     final_cuts = models.BooleanField(default=False)
-    
+
 
 class Player(models.Model):
     first_name = models.CharField(max_length=50)
@@ -20,6 +20,7 @@ class Player(models.Model):
     position = models.CharField(max_length=2, choices=POSITION)
     cap_hit = models.FloatField()
     dead_money = models.FloatField(null=True,blank=True)
+    offer = models.FloatField(null=True,blank=True)
 
     def __str__(self):
         return str(self.position + ' ' + self.first_name + " " + self.last_name)
@@ -30,6 +31,7 @@ class FreeAgent(models.Model):
     position = models.CharField(max_length=2, choices=POSITION)
     cap_hit = models.FloatField()
     on_team = models.BooleanField()
+    modified_cost = models.FloatField()
 
     def __str__(self):
         return str(self.position + ' ' + self.first_name + " " + self.last_name)
