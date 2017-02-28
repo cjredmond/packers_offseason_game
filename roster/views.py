@@ -85,7 +85,8 @@ class DraftPlayerView(CreateView):
 
 class ReSignPlayerView(CreateView):
     model = Player
-    fields = []
+    fields = ['offer']
+
     def get_success_url(self,**kwargs):
         return reverse('resign_view')
     def form_valid(self,form):
